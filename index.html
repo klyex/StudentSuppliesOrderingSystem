@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Supplies Ordering System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Header Section -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <span class="brand-icon">📚</span>
+        <div>
+          <h1>Student Supplies Ordering System</h1>
+          <p class="subtitle">Campus School Supplies Shop &bull; Point of Sale Terminal</p>
+        </div>
+      </div>
+      <div class="system-status">
+        <span class="badge badge-online">System Ready</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Application Layout -->
+  <main class="main-layout">
+    <!-- Left Column: 1. Product List Section -->
+    <section class="section product-section" id="product-section" aria-labelledby="product-heading">
+      <div class="section-header">
+        <h2 id="product-heading">Available School Supplies</h2>
+        <span class="item-count-badge" id="catalog-count-badge">6 Products Available</span>
+      </div>
+      <p class="section-description">Select from the available school supplies below to add them to your cart.</p>
+      
+      <!-- Product Cards Grid (Rendered dynamically via app.js) -->
+      <div class="product-grid" id="product-grid">
+        <!-- Dynamic Product Cards Injected Here -->
+      </div>
+    </section>
+
+    <!-- Right Column: Cart, Summary & Payment Sidebar -->
+    <aside class="sidebar-column">
+      
+      <!-- 2. Shopping Cart Section -->
+      <section class="section cart-section" id="cart-section" aria-labelledby="cart-heading">
+        <div class="section-header">
+          <h2 id="cart-heading">Shopping Cart</h2>
+          <span class="cart-badge" id="cart-item-count">0 items</span>
+        </div>
+
+        <div class="cart-container" id="cart-container">
+          <!-- Empty Cart State -->
+          <div class="empty-state" id="empty-cart-state">
+            <span class="empty-state-icon">🛒</span>
+            <p class="empty-state-text">Your cart is currently empty.</p>
+            <span class="empty-state-subtext">Click "Add to Cart" on any product to begin.</span>
+          </div>
+
+          <!-- Cart Line Items List (Will be populated in Stage 2) -->
+          <div class="cart-items-list" id="cart-items-list" style="display: none;">
+            <!-- Cart Items Injected Here -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Order Summary Section -->
+      <section class="section summary-section" id="summary-section" aria-labelledby="summary-heading">
+        <div class="section-header">
+          <h2 id="summary-heading">Order Summary</h2>
+        </div>
+
+        <div class="summary-details">
+          <div class="summary-row">
+            <span>Items Selected</span>
+            <span class="summary-val" id="summary-total-items">0</span>
+          </div>
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span class="summary-val" id="summary-subtotal">₱0.00</span>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-row total-row">
+            <span class="total-label">Total Amount Due</span>
+            <span class="total-val" id="summary-total-amount">₱0.00</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Payment Section -->
+      <section class="section payment-section" id="payment-section" aria-labelledby="payment-heading">
+        <div class="section-header">
+          <h2 id="payment-heading">Cash Payment</h2>
+        </div>
+
+        <form class="payment-form" id="payment-form" onsubmit="return false;">
+          <label for="payment-input" class="form-label">Enter Cash Amount Paid (₱):</label>
+          <div class="input-group">
+            <span class="input-prefix">₱</span>
+            <input 
+              type="number" 
+              id="payment-input" 
+              class="payment-input" 
+              placeholder="0.00" 
+              step="0.01" 
+              min="0"
+              autocomplete="off"
+            >
+          </div>
+
+          <!-- Inline Error Alert Container -->
+          <div class="error-banner" id="payment-error-banner" role="alert" style="display: none;">
+            <span class="error-icon">⚠️</span>
+            <span class="error-message" id="payment-error-message"></span>
+          </div>
+
+          <button type="button" class="btn btn-primary btn-block" id="btn-confirm-payment">
+            Confirm Payment
+          </button>
+        </form>
+      </section>
+
+    </aside>
+  </main>
+
+  <!-- 5. Receipt Section (Modal / Overlay) -->
+  <div class="receipt-overlay" id="receipt-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="receipt-title">
+    <div class="receipt-card">
+      <div class="receipt-header">
+        <div class="receipt-logo">🧾</div>
+        <h2 id="receipt-title">OFFICIAL RECEIPT</h2>
+        <p class="receipt-store-name">Campus Student Supplies Shop</p>
+        <p class="receipt-tagline">Quality school supplies for academic excellence</p>
+      </div>
+
+      <div class="receipt-meta">
+        <div><strong>Ref #:</strong> <span id="receipt-ref-no">SSOS-0000-0000</span></div>
+        <div><strong>Date & Time:</strong> <span id="receipt-timestamp">--</span></div>
+      </div>
+
+      <div class="receipt-divider"></div>
+
+      <!-- Itemized Table -->
+      <table class="receipt-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th class="text-center">Qty</th>
+            <th class="text-right">Price</th>
+            <th class="text-right">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody id="receipt-items-body">
+          <!-- Injected items -->
+        </tbody>
+      </table>
+
+      <div class="receipt-divider"></div>
+
+      <!-- Financial Totals -->
+      <div class="receipt-totals">
+        <div class="receipt-row">
+          <span>Total Amount Due:</span>
+          <span class="receipt-bold" id="receipt-total-due">₱0.00</span>
+        </div>
+        <div class="receipt-row">
+          <span>Amount Paid (Cash):</span>
+          <span id="receipt-amount-paid">₱0.00</span>
+        </div>
+        <div class="receipt-row change-row">
+          <span class="change-label">Change:</span>
+          <span class="change-val" id="receipt-change">₱0.00</span>
+        </div>
+      </div>
+
+      <div class="receipt-confirmation" id="receipt-confirmation-msg">
+        🎉 Payment Successful! Thank you for purchasing.
+      </div>
+
+      <div class="receipt-actions">
+        <button type="button" class="btn btn-secondary btn-block" id="btn-new-transaction">
+          🔄 Start New Transaction
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <p>IT415 Midterm Practical Examination &bull; Student Supplies Ordering System</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
